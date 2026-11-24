@@ -198,6 +198,34 @@ function saveAttempt(type){
   usage.counts[type] = count + 1;
   localStorage.setItem('qcDailyUsage', JSON.stringify(usage));
   return true;
+  }
+  // RANDOMIZE QUESTIONS AND ANSWERS
+function shuffleArray(array){
+  const result = [...array];
+
+  for(let i = result.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function prepareQuestions(bank){
+  return shuffleArray(bank).map(q => {
+    const answers = shuffleArray(
+      q.a.map((answer, index) => ({
+        text: answer,
+        correct: index === q.c
+      }))
+    );
+
+    return {
+      q: q.q,
+      a: answers.map(item => item.text),
+      c: answers.findIndex(item => item.correct)
+    };
+  });
 }
 function updatePoints(){
 document.getElementById('points').textContent=points+' Points';
