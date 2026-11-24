@@ -238,19 +238,32 @@ function show(id){
 document.getElementById(x).classList.add('hidden'));
 document.getElementById(id).classList.remove('hidden');
 }
-
+  
 function startQuiz(type){
-category=type;
-mode='category';
-questions=banks[type];
-current=0;
-score=0;
-document.getElementById('quizTitle').textContent=
-({general:'🌍 General Knowledge',science:'🔬 Science',math:'➗ Mathematics',tech:'💻 Technology',sports:'⚽ Sports'})[type];
-show('game');
-loadQuestion();
-}
 
+  if(!saveAttempt(type)) return;
+
+  category = type;
+  mode = 'category';
+
+  questions = prepareQuestions(banks[type]);
+
+  current = 0;
+  score = 0;
+
+  document.getElementById('quizTitle').textContent =
+  ({
+    general:'🌍 General Knowledge',
+    science:'🔬 Science',
+    math:'➗ Mathematics',
+    tech:'💻 Technology',
+    sports:'⚽ Sports'
+  })[type];
+
+  show('game');
+  loadQuestion();
+}
+  
 function startDaily(){
 mode='daily';
 category='Daily Challenge';
