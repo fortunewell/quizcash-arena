@@ -3,134 +3,218 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QuizCash Arena</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fc;color:#17233e}
-header{background:#101f42;color:white;padding:22px 18px}
+body{margin:0;background:#f2f5fb;color:#17233e;font-family:Arial,sans-serif}
+header{background:#102044;color:white;padding:23px 18px}
 header h1{margin:0;font-size:25px}
-header p{margin:7px 0 0;color:#cbd6ed}
-main{max-width:650px;margin:auto;padding:18px}
-.card{background:white;padding:20px;border-radius:14px;margin-bottom:17px;box-shadow:0 3px 14px #15264b12}
+header p{color:#cbd6ed;margin-bottom:0}
+main{max-width:650px;margin:auto;padding:17px}
+.card{background:white;padding:18px;border-radius:14px;margin-bottom:15px;box-shadow:0 3px 14px #14264b12}
 .balance{background:#172d59;color:white}
 .balance small{color:#cbd6ed}
-.balance h2{font-size:32px;margin:8px 0}
+.balance h2{font-size:30px;margin:8px 0}
 h2,h3{margin-top:0}
-button{background:#2255bd;color:white;border:0;padding:13px 18px;border-radius:9px;font-size:15px;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5}
+button{background:#2455b5;color:white;border:0;border-radius:9px;padding:13px;font-size:15px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6}
+.category{width:100%;text-align:left;background:#edf2fc;color:#17356c;margin:6px 0;padding:16px}
+.category span{font-size:22px;margin-right:10px}
 .secondary{background:#e9effb;color:#17356c}
 .option{display:block;width:100%;text-align:left;margin:10px 0;background:#edf2fc;color:#17233e}
-.option:disabled{opacity:1}
-.option.correct{background:#d5f5df;color:#12602d}
-.option.wrong{background:#ffe0e0;color:#a32020}
-nav{display:flex;justify-content:space-around;background:white;padding:15px;position:sticky;bottom:0;border-top:1px solid #ddd}
-nav button{background:none;color:#17356c;padding:8px;font-size:13px}
+.correct{background:#d5f5df;color:#12602d}
+.wrong{background:#ffe0e0;color:#a32020}
 .hidden{display:none}
 .muted{color:#71809a;font-size:14px}
-footer{text-align:center;color:#8290a5;padding:20px;font-size:12px}
+nav{position:sticky;bottom:0;background:white;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:12px 2px}
+nav button{background:none;color:#17356c;padding:8px;font-size:12px}
+footer{text-align:center;padding:20px;color:#8490a5;font-size:12px}
 </style>
 </head>
 <body>
+
 <header>
 <h1>🏆 QuizCash Arena</h1>
 <p>Play smart. Earn points. Have fun!</p>
 </header>
 
 <main>
+
 <section id="home">
 <div class="card balance">
 <small>YOUR TOTAL POINTS</small>
 <h2 id="points">0 Points</h2>
-<p>Keep playing to increase your score!</p>
+<p>Keep playing and improve your score!</p>
 </div>
 
 <div class="card">
-<h2>Welcome to the Arena!</h2>
-<p>Test your knowledge with exciting trivia challenges.</p>
-<button onclick="show('game')">Play Quiz Now →</button>
+<h2>Welcome, Champion!</h2>
+<p>Choose a quiz category and test your knowledge.</p>
+<button onclick="show('categories')">Explore Quizzes →</button>
 </div>
 
 <div class="card">
-<h3>🎯 Daily Challenge</h3>
-<p>Answer questions correctly and collect points.</p>
-<button class="secondary" onclick="show('game')">Start Challenge</button>
+<h3>📅 Daily Challenge</h3>
+<p>Try a separate set of daily questions.</p>
+<button onclick="startDaily()">Start Daily Challenge</button>
+</div>
+</section>
+
+<section id="categories" class="hidden">
+<div class="card">
+<h2>Choose Your Category</h2>
+<p class="muted">Each category has its own five questions.</p>
+<button class="category" onclick="startQuiz('general')"><span>🌍</span>General Knowledge</button>
+<button class="category" onclick="startQuiz('science')"><span>🔬</span>Science</button>
+<button class="category" onclick="startQuiz('math')"><span>➗</span>Mathematics</button>
+<button class="category" onclick="startQuiz('tech')"><span>💻</span>Technology</button>
+<button class="category" onclick="startQuiz('sports')"><span>⚽</span>Sports</button>
 </div>
 </section>
 
 <section id="game" class="hidden">
 <div class="card">
-<h3>Trivia Challenge</h3>
-<p id="progress" class="muted">Question 1 of 5</p>
-<h3 id="question">Loading...</h3>
+<h3 id="quizTitle">Quiz Challenge</h3>
+<p id="progress" class="muted"></p>
+<h3 id="question"></h3>
 <div id="answers"></div>
 <p id="feedback"></p>
 <button id="next" class="hidden" onclick="nextQuestion()">Next Question →</button>
 </div>
 </section>
 
+<section id="result" class="hidden">
+<div class="card">
+<h2>🎉 Quiz Completed!</h2>
+<h3 id="resultScore"></h3>
+<p id="resultMessage"></p>
+<button onclick="show('categories')">Try Another Category</button>
+<button class="secondary" onclick="show('home')">Home</button>
+</div>
+</section>
+
 <section id="referral" class="hidden">
 <div class="card">
 <h2>👥 Refer & Earn</h2>
-<p>Invite your friends to join QuizCash Arena.</p>
-<p>Your referral code:</p>
-<h2 id="refcode">QCASH-PLAYER</h2>
+<p>Invite friends to join QuizCash Arena.</p>
+<h3 id="refcode">QCASH-PLAYER</h3>
 <button onclick="copyCode()">Copy Referral Code</button>
-<p class="muted">Referral rewards will be activated after we build the registration and referral verification system.</p>
+<p class="muted">Referral tracking and verified rewards will be added in a later development stage.</p>
 </div>
 </section>
 
 <section id="account" class="hidden">
 <div class="card">
 <h2>👤 My Account</h2>
-<p>Welcome, Quiz Champion!</p>
-<p>Total points: <strong id="accountPoints">0</strong></p>
-<p>Account: Guest player</p>
-<p class="muted">Secure player registration is coming in the next development stage.</p>
+<p>Account: Guest Player</p>
+<h3 id="accountPoints">0 Points</h3>
+<p class="muted">Registration and secure accounts are coming soon.</p>
 </div>
 </section>
+
 </main>
 
 <nav>
 <button onclick="show('home')">🏠 Home</button>
-<button onclick="show('game')">🎮 Play</button>
+<button onclick="show('categories')">🎮 Quizzes</button>
 <button onclick="show('referral')">👥 Refer</button>
 <button onclick="show('account')">👤 Account</button>
 </nav>
 
-<footer>© 2026 QuizCash Arena. All rights reserved.</footer>
+<footer>© 2026 QuizCash Arena</footer>
 
 <script>
-let points=Number(localStorage.getItem('qcpoints')||0);
-let current=0;
-let score=0;
-let answered=false;
+const banks={
+general:[
+{q:"What is the capital of Kenya?",a:["Nairobi","Mombasa","Kisumu","Nakuru"],c:0},
+{q:"Which is the largest continent?",a:["Africa","Asia","Europe","Australia"],c:1},
+{q:"How many days are in a leap year?",a:["365","364","366","367"],c:2},
+{q:"Which animal is known as the King of the Jungle?",a:["Elephant","Tiger","Lion","Leopard"],c:2},
+{q:"Which ocean is the largest?",a:["Indian","Atlantic","Arctic","Pacific"],c:3}
+],
+science:[
+{q:"Which planet is called the Red Planet?",a:["Venus","Mars","Earth","Jupiter"],c:1},
+{q:"What gas do plants absorb?",a:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],c:2},
+{q:"What is the chemical symbol for water?",a:["CO2","H2O","O2","NaCl"],c:1},
+{q:"Which organ pumps blood?",a:["Lungs","Brain","Heart","Liver"],c:2},
+{q:"What force pulls objects towards Earth?",a:["Friction","Gravity","Magnetism","Pressure"],c:1}
+],
+math:[
+{q:"What is 12 × 5?",a:["50","55","60","65"],c:2},
+{q:"What is 100 divided by 4?",a:["20","25","30","40"],c:1},
+{q:"What is 15 + 27?",a:["40","41","42","43"],c:2},
+{q:"What is the square of 9?",a:["18","72","81","99"],c:2},
+{q:"How many sides does a hexagon have?",a:["5","6","7","8"],c:1}
+],
+tech:[
+{q:"What does CPU stand for?",a:["Central Processing Unit","Computer Power Unit","Central Program Utility","Control Processing User"],c:0},
+{q:"Which device is used to type?",a:["Monitor","Keyboard","Speaker","Printer"],c:1},
+{q:"What does WWW stand for?",a:["World Wide Web","World Web Window","Wide World Wire","Web World Work"],c:0},
+{q:"Which company developed Android?",a:["Apple","Microsoft","Google","IBM"],c:2},
+{q:"Which of these is a web browser?",a:["Chrome","Excel","Photoshop","Calculator"],c:0}
+],
+sports:[
+{q:"How many players does a football team have on the field?",a:["9","10","11","12"],c:2},
+{q:"Which sport uses a racket?",a:["Football","Tennis","Boxing","Rugby"],c:1},
+{q:"How many rings are on the Olympic symbol?",a:["4","5","6","7"],c:1},
+{q:"Which country is famous for sumo wrestling?",a:["China","Japan","India","Brazil"],c:1},
+{q:"In basketball, how many points is a free throw worth?",a:["1","2","3","4"],c:0}
+]
+};
 
-const questions=[
-{q:"What is the capital city of Kenya?",a:["Nairobi","Mombasa","Kisumu","Nakuru"],c:0},
-{q:"Which planet is known as the Red Planet?",a:["Venus","Mars","Jupiter","Saturn"],c:1},
-{q:"How many days are in a leap year?",a:["364","365","366","367"],c:2},
-{q:"Which is the largest ocean?",a:["Atlantic","Indian","Arctic","Pacific"],c:3},
-{q:"What is the chemical symbol for water?",a:["CO2","H2O","O2","NaCl"],c:1}
+const daily=[
+{q:"Which is the tallest mountain in Africa?",a:["Mount Kenya","Mount Kilimanjaro","Mount Elgon","Rwenzori"],c:1},
+{q:"Which currency is used in Kenya?",a:["Naira","Rand","Kenyan Shilling","Cedi"],c:2},
+{q:"How many months have 31 days?",a:["5","6","7","8"],c:2},
+{q:"Which is the fastest land animal?",a:["Lion","Horse","Cheetah","Leopard"],c:2},
+{q:"What is the opposite of ancient?",a:["Modern","Old","Historic","Traditional"],c:0}
 ];
+
+let points=Number(localStorage.getItem('qcpoints')||0);
+let current=0,score=0,questions=[],answered=false;
+let mode='category',category='';
 
 function updatePoints(){
 document.getElementById('points').textContent=points+' Points';
-document.getElementById('accountPoints').textContent=points;
+document.getElementById('accountPoints').textContent=points+' Points';
 localStorage.setItem('qcpoints',points);
 }
 
 function show(id){
-['home','game','referral','account'].forEach(x=>
+['home','categories','game','result','referral','account'].forEach(x=>
 document.getElementById(x).classList.add('hidden'));
 document.getElementById(id).classList.remove('hidden');
-if(id==='game' && current===0)loadQuestion();
+}
+
+function startQuiz(type){
+category=type;
+mode='category';
+questions=banks[type];
+current=0;
+score=0;
+document.getElementById('quizTitle').textContent=
+({general:'🌍 General Knowledge',science:'🔬 Science',math:'➗ Mathematics',tech:'💻 Technology',sports:'⚽ Sports'})[type];
+show('game');
+loadQuestion();
+}
+
+function startDaily(){
+mode='daily';
+category='Daily Challenge';
+questions=daily;
+current=0;
+score=0;
+document.getElementById('quizTitle').textContent='📅 Daily Challenge';
+show('game');
+loadQuestion();
 }
 
 function loadQuestion(){
 answered=false;
 let q=questions[current];
-document.getElementById('progress').textContent='Question '+(current+1)+' of '+questions.length;
+document.getElementById('progress').textContent=
+'Question '+(current+1)+' of '+questions.length;
 document.getElementById('question').textContent=q.q;
 document.getElementById('feedback').textContent='';
 document.getElementById('next').classList.add('hidden');
@@ -159,7 +243,7 @@ score+=10;
 document.getElementById('feedback').textContent='Correct! +10 points 🎉';
 }else{
 buttons[i].classList.add('wrong');
-document.getElementById('feedback').textContent='Not quite! Better luck next time.';
+document.getElementById('feedback').textContent='Incorrect. Keep learning!';
 }
 document.getElementById('next').classList.remove('hidden');
 }
@@ -171,23 +255,24 @@ loadQuestion();
 }else{
 points+=score;
 updatePoints();
-document.getElementById('question').textContent='Challenge completed! 🎉';
-document.getElementById('answers').innerHTML='<h2>You earned '+score+' points!</h2>';
-document.getElementById('feedback').textContent='Great effort. Come back for another challenge!';
-document.getElementById('next').classList.add('hidden');
-current=0;
-score=0;
+show('result');
+document.getElementById('resultScore').textContent=
+'You earned '+score+' points!';
+document.getElementById('resultMessage').textContent=
+'You completed '+category+'. Great effort!';
 }
 }
 
 function copyCode(){
 let code=document.getElementById('refcode').textContent;
 if(navigator.clipboard){
-navigator.clipboard.writeText(code).then(()=>alert('Referral code copied!')).catch(()=>alert(code));
+navigator.clipboard.writeText(code).then(()=>alert('Code copied!')).catch(()=>alert(code));
 }else{alert(code);}
 }
 
-document.getElementById('refcode').textContent='QCASH-'+Math.random().toString(36).substring(2,8).toUpperCase();
+document.getElementById('refcode').textContent=
+'QCASH-'+Math.random().toString(36).substring(2,8).toUpperCase();
+
 updatePoints();
 </script>
 </body>
