@@ -174,7 +174,31 @@ const daily=[
 let points=Number(localStorage.getItem('qcpoints')||0);
 let current=0,score=0,questions=[],answered=false;
 let mode='category',category='';
+// DAILY CATEGORY ATTEMPT SYSTEM
+function getDailyUsage(){
+  const today = new Date().toLocaleDateString('en-CA');
+  const saved = JSON.parse(localStorage.getItem('qcDailyUsage') || '{}');
 
+  if(saved.date !== today){
+    return {date:today, counts:{}};
+  }
+
+  return saved;
+}
+
+function saveAttempt(type){
+  const usage = getDailyUsage();
+  const count = usage.counts[type] || 0;
+
+  if(count >= 5){
+    alert('You have used all 5 attempts for this category today. Come back tomorrow!');
+    return false;
+  }
+
+  usage.counts[type] = count + 1;
+  localStorage.setItem('qcDailyUsage', JSON.stringify(usage));
+  return true;
+}
 function updatePoints(){
 document.getElementById('points').textContent=points+' Points';
 document.getElementById('accountPoints').textContent=points+' Points';
