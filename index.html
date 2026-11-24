@@ -176,12 +176,27 @@ let current=0,score=0,questions=[],answered=false;
 let mode='category',category='';
 // DAILY CATEGORY ATTEMPT SYSTEM
 function getDailyUsage(){
-  const today = new Date().toLocaleDateString('en-CA');
-  const saved = JSON.parse(localStorage.getItem('qcDailyUsage') || '{}');
+  const now = new Date();
+
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0')
+  ].join('-');
+
+  const saved = JSON.parse(
+    localStorage.getItem('qcDailyUsage') || '{}'
+  );
 
   if(saved.date !== today){
-    return {date:today, counts:{}};
+    return {
+      date: today,
+      counts: {}
+    };
   }
+
+  return saved;
+} 
 
   return saved;
 }
